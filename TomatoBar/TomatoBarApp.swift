@@ -8,9 +8,17 @@
 import SwiftUI
 import SwiftData
 import AppKit
+import UserNotifications
+
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+    }
+}
 
 @main
 struct TomatoBarApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @State private var timerEngine = TimerEngine()
 
     var sharedModelContainer: ModelContainer = {
