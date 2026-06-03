@@ -7,7 +7,7 @@ enum TimerState {
     case finished
 }
 
-enum SessionType {
+enum SessionType: String {
     case focus
     case shortBreak
     case longBreak
