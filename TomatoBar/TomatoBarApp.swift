@@ -7,15 +7,18 @@
 
 import SwiftUI
 import SwiftData
+import AppKit
 
 @main
 struct TomatoBarApp: App {
+    @State private var timerEngine = TimerEngine()
+
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
+            TimerConfiguration.self,
+            TimerSession.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
-
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
         } catch {
@@ -24,9 +27,24 @@ struct TomatoBarApp: App {
     }()
 
     var body: some Scene {
-        WindowGroup {
+        MenuBarExtra {
             ContentView()
+                .environment(timerEngine)
+                .modelContainer(sharedModelContainer)
+        } label: {
+            let icon = timerEngine.currentMode == .focus ? "🍅" : "☕️"
+            let mm = timerEngine.remainingSeconds / 60
+            let ss = timerEngine.remainingSeconds % 60
+            let timeStr = String(format: "%02d:%02d", mm, ss)
+            let modeStr: String = {
+                switch timerEngine.currentMode {
+                case .focus: return "专注中"
+                case .shortBreak: return "短休息"
+                case .longBreak: return "长休息"
+                }
+            }()
+            Text("\(icon) \(timeStr) \(modeStr)")
         }
-        .modelContainer(sharedModelContainer)
+        .menuBarExtraStyle(.window)
     }
 }
