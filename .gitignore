@@ -1,6 +1,22 @@
-.superpowers/
-docs/superpowers/
+# Xcode
 xcuserdata/
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+timeline.xctimeline
+playground.xcworkspace
+.build/
 
+# Carthage
+Carthage/Build/
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Superpowers
 .superpowers/
 docs/superpowers/
