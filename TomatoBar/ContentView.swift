@@ -41,16 +41,13 @@ struct ContentView: View {
         )
         timerEngine.onSessionComplete = { mode, completed in
             saveSession(mode: mode, completed: completed)
-            let config = fetchConfig()
             if completed {
+                let config = fetchConfig()
                 NotificationManager.shared.notify(sessionType: mode, config: config)
-                if config.soundEnabled {
-                    NotificationManager.shared.playSound()
-                }
-            }
-            if config.autoStartNext && completed {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    timerEngine.start()
+                if config.autoStartNext {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        timerEngine.start()
+                    }
                 }
             }
         }

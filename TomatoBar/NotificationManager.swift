@@ -1,6 +1,5 @@
 import Foundation
 import UserNotifications
-import AppKit
 
 final class NotificationManager {
     static let shared = NotificationManager()
@@ -21,14 +20,18 @@ final class NotificationManager {
         let content = UNMutableNotificationContent()
         switch sessionType {
         case .focus:
-            content.title = "专注完成"
-            content.body = "休息一下吧，\(config.shortBreakDuration) 分钟短休息"
+            content.title = "Focus Complete"
+            content.body = "Take a break, \(config.shortBreakDuration) min short break"
         case .shortBreak:
-            content.title = "休息结束"
-            content.body = "开始新的番茄"
+            content.title = "Break Over"
+            content.body = "Start a new pomodoro"
         case .longBreak:
-            content.title = "休息结束"
-            content.body = "开始新一轮番茄"
+            content.title = "Long Break Over"
+            content.body = "Start a new round"
+        }
+
+        if config.soundEnabled {
+            content.sound = .default
         }
 
         let request = UNNotificationRequest(
@@ -37,9 +40,5 @@ final class NotificationManager {
             trigger: nil
         )
         UNUserNotificationCenter.current().add(request)
-    }
-
-    func playSound() {
-        NSSound.beep()
     }
 }
