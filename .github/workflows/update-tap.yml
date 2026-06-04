@@ -1,11 +1,13 @@
 name: Update Homebrew Tap
 
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Release"]
+    types: [completed]
 
 jobs:
   update-tap:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -16,37 +18,22 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="${{ github.event.release.tag_name }}"
+          # Get the tag from the workflow run (tag push shows as head_branch)
+          TAG="${{ github.event.workflow_run.head_branch }}"
           VERSION="${TAG#v}"
-
-          # Find universal zip asset
-          URL=$(gh release view "$TAG" \
-            --repo "${{ github.repository }}" \
-            --json assets \
-            --jq '.assets[] | select(.name | test("universal")) | .url')
 
           SHA256=$(gh release view "$TAG" \
             --repo "${{ github.repository }}" \
             --json assets \
             --jq '.assets[] | select(.name | test("universal")) | .digest' | sed 's/^sha256://')
 
-          if [ -z "$URL" ]; then
-            URL=$(gh release view "$TAG" \
-              --repo "${{ github.repository }}" \
-              --json assets \
-              --jq '.assets[0].url')
-          fi
-
           if [ -z "$SHA256" ]; then
-            SHA256=$(gh release view "$TAG" \
-              --repo "${{ github.repository }}" \
-              --json assets \
-              --jq '.assets[0].digest' | sed 's/^sha256://')
+            echo "ERROR: Could not find SHA256 for universal asset"
+            exit 1
           fi
 
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "sha256=$SHA256" >> $GITHUB_OUTPUT
-          echo "tag=$TAG" >> $GITHUB_OUTPUT
 
           echo "Version: $VERSION"
           echo "SHA256: $SHA256"
