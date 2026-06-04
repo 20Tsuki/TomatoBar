@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: macos-latest
+
+    strategy:
+      matrix:
+        include:
+          - arch: arm64
+            name: arm64
+          - arch: x86_64
+            name: x86_64
+          - arch: "arm64 x86_64"
+            name: universal
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          XCODE_PATH=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
+          echo "Using Xcode: $XCODE_PATH"
+          sudo xcode-select -s "$XCODE_PATH"
+
+      - name: Build (${{ matrix.name }})
+        run: |
+          xcodebuild build \
+            -project TomatoBar.xcodeproj \
+            -scheme TomatoBar \
+            -configuration Release \
+            -derivedDataPath ./DerivedData \
+            ARCHS="${{ matrix.arch }}" \
+            ONLY_ACTIVE_ARCH=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Package (${{ matrix.name }})
+        run: |
+          APP_PATH=$(find ./DerivedData/Build/Products/Release -name "TomatoBar.app" -maxdepth 2)
+          echo "App found at: $APP_PATH"
+          ZIP_NAME="TomatoBar-${{ matrix.name }}.zip"
+          ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$ZIP_NAME"
+          echo "zip_name=$ZIP_NAME" >> $GITHUB_ENV
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TomatoBar-${{ matrix.name }}
+          path: TomatoBar-${{ matrix.name }}.zip
+
+  create-release:
+    needs: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: packages
+          merge-multiple: true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: packages/*.zip
+          generate_release_notes: true
