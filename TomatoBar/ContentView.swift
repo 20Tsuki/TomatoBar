@@ -14,15 +14,29 @@ struct ContentView: View {
     @State private var timerConfigured = false
 
     var body: some View {
-        TabView {
-            TimerPanelView()
-                .tabItem { Text("计时") }
-            StatsView()
-                .tabItem { Text("统计") }
-            SettingsView()
-                .tabItem { Text("设置") }
+        VStack(spacing: 0) {
+            TabView {
+                TimerPanelView()
+                    .tabItem { Text("计时") }
+                StatsView()
+                    .tabItem { Text("统计") }
+                SettingsView()
+                    .tabItem { Text("设置") }
+            }
+
+            Divider()
+
+            HStack {
+                Spacer()
+                Button("Quit") {
+                    NSApplication.shared.terminate(nil)
+                }
+                .keyboardShortcut("q")
+                Spacer()
+            }
+            .padding(.vertical, 6)
         }
-        .frame(width: 320, height: 480)
+        .frame(width: 320, height: 500)
         .onAppear {
             guard !timerConfigured else { return }
             timerConfigured = true
