@@ -21,9 +21,17 @@ A minimalist macOS menu bar Pomodoro timer. Stay focused, take breaks, track you
 
 ## Installation
 
+### Homebrew (recommended)
+
+```bash
+brew install 20tsuki/tap/tomatobar
+```
+
+### Manual Download
+
 Download the latest version from [Releases](https://github.com/20Tsuki/TomatoBar/releases) and drag `TomatoBar.app` into your `Applications` folder.
 
-Or build from source:
+### Build from Source
 
 ```bash
 git clone https://github.com/20Tsuki/TomatoBar.git
