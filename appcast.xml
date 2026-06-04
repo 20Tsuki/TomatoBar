@@ -7,11 +7,11 @@
     <link>https://github.com/20Tsuki/TomatoBar</link>
     <item>
       <title>Version 1.0.0</title>
-      <pubDate>Thu, 04 Jun 2026 15:52:22 +0000</pubDate>
-      <sparkle:version>2</sparkle:version>
+      <pubDate>Thu, 04 Jun 2026 15:57:28 +0000</pubDate>
+      <sparkle:version>3</sparkle:version>
       <sparkle:shortVersionString>1.0.0</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-      <enclosure url="https://github.com/20Tsuki/TomatoBar/releases/download/v1.0.0/TomatoBar-universal.zip" sparkle:version="2" sparkle:shortVersionString="1.0.0" length="1301267" type="application/octet-stream" />
+      <enclosure url="https://github.com/20Tsuki/TomatoBar/releases/download/v1.0.0/TomatoBar-universal.zip" sparkle:version="3" sparkle:shortVersionString="1.0.0" length="1301267" type="application/octet-stream" />
     </item>
   </channel>
 </rss>
