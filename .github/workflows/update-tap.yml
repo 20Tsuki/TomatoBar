@@ -1,0 +1,79 @@
+name: Update Homebrew Tap
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  update-tap:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Get Release Info
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          VERSION="${TAG#v}"
+
+          # Find universal zip asset
+          URL=$(gh release view "$TAG" \
+            --repo "${{ github.repository }}" \
+            --json assets \
+            --jq '.assets[] | select(.name | test("universal")) | .url')
+
+          SHA256=$(gh release view "$TAG" \
+            --repo "${{ github.repository }}" \
+            --json assets \
+            --jq '.assets[] | select(.name | test("universal")) | .digest' | sed 's/^sha256://')
+
+          if [ -z "$URL" ]; then
+            URL=$(gh release view "$TAG" \
+              --repo "${{ github.repository }}" \
+              --json assets \
+              --jq '.assets[0].url')
+          fi
+
+          if [ -z "$SHA256" ]; then
+            SHA256=$(gh release view "$TAG" \
+              --repo "${{ github.repository }}" \
+              --json assets \
+              --jq '.assets[0].digest' | sed 's/^sha256://')
+          fi
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "sha256=$SHA256" >> $GITHUB_OUTPUT
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+          echo "Version: $VERSION"
+          echo "SHA256: $SHA256"
+
+      - name: Checkout Homebrew Tap
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.repository_owner }}/homebrew-tap
+          token: ${{ secrets.TAP_REPO_TOKEN }}
+          path: tap
+
+      - name: Update Cask
+        run: |
+          VERSION="${{ steps.release.outputs.version }}"
+          SHA256="${{ steps.release.outputs.sha256 }}"
+
+          sed -i "s/version \".*\"/version \"$VERSION\"/" tap/Casks/tomatobar.rb
+          sed -i "s/sha256 \".*\"/sha256 \"$SHA256\"/" tap/Casks/tomatobar.rb
+
+          echo "Updated cask:"
+          cat tap/Casks/tomatobar.rb
+
+      - name: Commit and Push
+        run: |
+          cd tap
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add Casks/tomatobar.rb
+          git commit -m "Update TomatoBar to ${{ steps.release.outputs.version }}" || exit 0
+          git push
