@@ -38,7 +38,7 @@ open TomatoBar.xcodeproj
 - **Swift Charts** — 统计图表
 - **MenuBarExtra** — 菜单栏驻留
 - **UserNotifications** — 系统通知
-- 最低系统：macOS 26
+- 最低系统：macOS 14
 
 ## License
 
