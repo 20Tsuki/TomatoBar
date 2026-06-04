@@ -9,10 +9,12 @@ import SwiftUI
 import SwiftData
 import AppKit
 import UserNotifications
+import Sparkle
 
-final class AppDelegate: NSObject, NSApplicationDelegate {
+final class AppDelegate: NSObject, NSApplicationDelegate, SPUUpdaterDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+        _ = SPUStandardUpdaterController.shared
     }
 }
 

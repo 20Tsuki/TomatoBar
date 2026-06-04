@@ -27,6 +27,7 @@ jobs:
             -scheme TomatoBar \
             -configuration Debug \
             -destination "platform=macOS" \
+            -clonedSourcePackagesDirPath ./SourcePackages \
             build \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
@@ -39,6 +40,7 @@ jobs:
             -scheme TomatoBar \
             -configuration Debug \
             -destination "platform=macOS" \
+            -clonedSourcePackagesDirPath ./SourcePackages \
             test \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \

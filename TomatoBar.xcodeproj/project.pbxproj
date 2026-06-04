@@ -112,6 +112,7 @@
 			);
 			name = TomatoBar;
 			packageProductDependencies = (
+				218A72C134EF4DFDBF0417B7 /* Sparkle */,
 			);
 			productName = TomatoBar;
 			productReference = B262D5F72FCF435F006567A1 /* TomatoBar.app */;
@@ -204,6 +205,9 @@
 				B262D6052FCF4361006567A1 /* TomatoBarTests */,
 				B262D60F2FCF4361006567A1 /* TomatoBarUITests */,
 			);
+			packageReferences = (
+				BBE96B69ECF54CF8AE400400 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 		};
 /* End PBXProject section */
 
@@ -267,6 +271,44 @@
 			targetProxy = B262D6112FCF4361006567A1 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BBE96B69ECF54CF8AE400400 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		218A72C134EF4DFDBF0417B7 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BBE96B69ECF54CF8AE400400 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		69E209F001D0489B9B17DCF3 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BDA3A63B584B4CC0B8220E94 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 69E209F001D0489B9B17DCF3 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B262D6182FCF4361006567A1 /* Debug */ = {
@@ -403,8 +445,10 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_SUEnableAutomaticChecks = YES;
+				INFOPLIST_KEY_SUFeedURL = "https://20tsuki.github.io/TomatoBar/appcast.xml";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -436,8 +480,10 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_SUEnableAutomaticChecks = YES;
+				INFOPLIST_KEY_SUFeedURL = "https://20tsuki.github.io/TomatoBar/appcast.xml";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -469,10 +515,10 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TomatoBar.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TomatoBar";
 			};
 			name = Debug;
@@ -491,10 +537,10 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TomatoBar.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TomatoBar";
 			};
 			name = Release;
@@ -511,10 +557,10 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				TEST_TARGET_NAME = TomatoBar;
 			};
 			name = Debug;
@@ -531,10 +577,10 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				TEST_TARGET_NAME = TomatoBar;
 			};
 			name = Release;

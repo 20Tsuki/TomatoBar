@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 jobs:
-  release:
+  build:
     runs-on: macos-latest
 
     strategy:
@@ -26,7 +26,6 @@ jobs:
       - name: Select Xcode
         run: |
           XCODE_PATH=$(ls -d /Applications/Xcode*.app | sort -V | tail -1)
-          echo "Using Xcode: $XCODE_PATH"
           sudo xcode-select -s "$XCODE_PATH"
 
       - name: Build (${{ matrix.name }})
@@ -45,7 +44,6 @@ jobs:
       - name: Package (${{ matrix.name }})
         run: |
           APP_PATH=$(find ./DerivedData/Build/Products/Release -name "TomatoBar.app" -maxdepth 2)
-          echo "App found at: $APP_PATH"
           ZIP_NAME="TomatoBar-${{ matrix.name }}.zip"
           ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$ZIP_NAME"
           echo "zip_name=$ZIP_NAME" >> $GITHUB_ENV
@@ -56,13 +54,16 @@ jobs:
           name: TomatoBar-${{ matrix.name }}
           path: TomatoBar-${{ matrix.name }}.zip
 
-  create-release:
-    needs: release
+  release:
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Download Artifacts
         uses: actions/download-artifact@v4
         with:
@@ -74,3 +75,65 @@ jobs:
         with:
           files: packages/*.zip
           generate_release_notes: true
+
+      - name: Update Appcast
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          python3 << 'PYEOF'
+          import os, re, time, hashlib
+          from xml.etree import ElementTree as ET
+
+          tag = os.environ["TAG"]
+          version = tag.lstrip("v")
+          build = os.environ.get("GITHUB_RUN_NUMBER", "1")
+
+          # Read existing appcast
+          tree = ET.parse("docs/appcast.xml")
+          root = tree.getroot()
+          channel = root.find("channel")
+
+          ns = {
+              "sparkle": "http://www.andymatuschak.org/xml-namespaces/sparkle",
+              "dc": "http://purl.org/dc/elements/1.1/",
+          }
+          ET.register_namespace("sparkle", "http://www.andymatuschak.org/xml-namespaces/sparkle")
+          ET.register_namespace("dc", "http://purl.org/dc/elements/1.1/")
+
+          # Generate entry for the universal zip
+          zip_name = "TomatoBar-universal.zip"
+          zip_path = f"packages/{zip_name}"
+
+          file_size = "0"
+          if os.path.exists(zip_path):
+              file_size = str(os.path.getsize(zip_path))
+
+          download_url = f"https://github.com/20Tsuki/TomatoBar/releases/download/{tag}/{zip_name}"
+          pub_date = time.strftime("%a, %d %b %Y %H:%M:%S %z", time.gmtime())
+
+          item = ET.SubElement(channel, "item")
+          ET.SubElement(item, "title").text = f"Version {version}"
+          ET.SubElement(item, "pubDate").text = pub_date
+          ET.SubElement(item, "{http://www.andymatuschak.org/xml-namespaces/sparkle}version").text = build
+          ET.SubElement(item, "{http://www.andymatuschak.org/xml-namespaces/sparkle}shortVersionString").text = version
+          ET.SubElement(item, "{http://www.andymatuschak.org/xml-namespaces/sparkle}minimumSystemVersion").text = "14.0"
+
+          enclosure = ET.SubElement(item, "enclosure")
+          enclosure.set("url", download_url)
+          enclosure.set("{http://www.andymatuschak.org/xml-namespaces/sparkle}version", build)
+          enclosure.set("{http://www.andymatuschak.org/xml-namespaces/sparkle}shortVersionString", version)
+          enclosure.set("length", file_size)
+          enclosure.set("type", "application/octet-stream")
+
+          # Write with proper formatting
+          ET.indent(tree, space="  ")
+          tree.write("docs/appcast.xml", encoding="utf-8", xml_declaration=True)
+          print(f"Appcast updated for {tag}")
+          PYEOF
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: gh-pages
