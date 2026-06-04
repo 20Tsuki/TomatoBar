@@ -6,12 +6,12 @@
     <language>zh</language>
     <link>https://github.com/20Tsuki/TomatoBar</link>
     <item>
-      <title>Version 1.0.1</title>
-      <pubDate>Thu, 04 Jun 2026 16:27:35 +0000</pubDate>
-      <sparkle:version>5</sparkle:version>
-      <sparkle:shortVersionString>1.0.1</sparkle:shortVersionString>
+      <title>Version 1.0.2</title>
+      <pubDate>Thu, 04 Jun 2026 16:38:26 +0000</pubDate>
+      <sparkle:version>6</sparkle:version>
+      <sparkle:shortVersionString>1.0.2</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-      <enclosure url="https://github.com/20Tsuki/TomatoBar/releases/download/v1.0.1/TomatoBar-universal.zip" sparkle:version="5" sparkle:shortVersionString="1.0.1" length="1302654" type="application/octet-stream" />
+      <enclosure url="https://github.com/20Tsuki/TomatoBar/releases/download/v1.0.2/TomatoBar-universal.zip" sparkle:version="6" sparkle:shortVersionString="1.0.2" length="1310634" type="application/octet-stream" />
     </item>
   </channel>
 </rss>
