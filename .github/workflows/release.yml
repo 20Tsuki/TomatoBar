@@ -46,13 +46,16 @@ jobs:
           APP_PATH=$(find ./DerivedData/Build/Products/Release -name "TomatoBar.app" -maxdepth 2)
           ZIP_NAME="TomatoBar-${{ matrix.name }}.zip"
           ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$ZIP_NAME"
+          shasum -a 256 "$ZIP_NAME" | tee "$ZIP_NAME.sha256"
           echo "zip_name=$ZIP_NAME" >> $GITHUB_ENV
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: TomatoBar-${{ matrix.name }}
-          path: TomatoBar-${{ matrix.name }}.zip
+          path: |
+            TomatoBar-${{ matrix.name }}.zip
+            TomatoBar-${{ matrix.name }}.zip.sha256
 
   release:
     needs: build
@@ -70,10 +73,21 @@ jobs:
           path: packages
           merge-multiple: true
 
+      - name: Generate Checksums
+        run: |
+          cat packages/*.sha256 > packages/checksums.txt
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "### SHA256 Checksums" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat packages/checksums.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: packages/*.zip
+          files: |
+            packages/*.zip
+            packages/checksums.txt
           generate_release_notes: true
 
       - name: Update Appcast
